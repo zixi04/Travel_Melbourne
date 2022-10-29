@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="utf-8" />
+      <title>Demo: Add points to a web map</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js"></script>
+      <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
+      <style>
+            body {
+                  margin: 0;
+                  padding: 0;
+                  overflow: hidden;
+            }
+
+
+            h1 {
+                  text-align: center
+            }
+
+            #map {
+                  position: relative;
+                  /* left: 500px; */
+
+                  width: 100vw;
+                  height: 100vh;
+
+            }
+
+
+            #dashboard {
+                  position: absolute;
+                  top: 60px;
+                  left: 40px;
+                  padding: 10px;
+                  background: rgba(255, 255, 255, 0);
+                  height: 200px;
+                  z-index: 1000;
+                  width: 350px;
+                  font-size: 20px;
+            }
+
+
+            #dashboard2 {
+                  position: absolute;
+                  bottom: 10px;
+                  right: 0px;
+                  /* padding: 10px; */
+                  background: rgba(255, 255, 255, 0.7);
+                  height: 80%;
+                  z-index: 1000;
+                  width: 30%;
+                  margin: auto;
+                  font-size: 20px;
+                  overflow: auto
+            }
+
+
+
+            #filters {
+                  position: relative;
+                  top: 25px;
+                  left: 15px;
+                  z-index: 1000;
+                  height: 100px;
+                  width: 320px;
+                  font-size: 16px;
+                  overflow: auto;
+                  text-align: center;
+                  font-weight: bold;
+                  color: #953232;
+                  display: grid;
+                  grid-template-columns: auto auto auto;
+
+            }
+
+            #viz1666963505651 {
+            position: relative;
+            top: 0px;
+            right: 0px;
+            background: rgba(255, 255, 255, 0.8);
+            height: 100%;
+            z-index: 1000;
+            width: 100%;
+            overflow: auto;
+
+        }
+
+        .button1 {
+            background-color: #7cafe5; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 8px;
+    font-size: 8spx;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+   }
+
+   .button1:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.button1:active {
+  background-color: #4CAF50;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+
+
+
+
+   .button2 {
+            background-color: rgba(233,124,124, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+ 
+
+    border-radius: 10px;
+   }
+
+
+   .button3 {
+            background-color: rgba(124, 175, 229, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   }
+
+   .button4 {
+            background-color: rgba(126,148,168, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   } 
+   .button5 {
+            background-color: rgba(249,177,30, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   } 
+   
+   .button6 {
+            background-color: rgba(176,146,236, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   }
+   
+
+
+   .button7 {
+            background-color: rgba(235,147,206, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   } 
+   .button8 {
+            background-color: rgba(124, 175, 229, 0.85);
+    border: none;
+    color: white;
+    /* padding: 15px 32px; */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+
+    border-radius: 10px;
+   }
+
+
+
+
+
+
+   .disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+
+      </style>
+</head>
+
+<body style="background-color:rgb(255, 255, 255);">
+      
+      <div>
+            <h1 style="color: rgb(0, 0, 0);">Travel in Melbourne City       <button  class="button1" onclick="myFunction()">Top 10 Sight</button>
+                  <!-- <a href="https://public.tableau.com/app/profile/guoan.wang/viz/rank_16669741014670/Dashboard1">Restaurant</a> -->
+                   <button class="button1" type="submit" onclick="window.open('https://public.tableau.com/views/Restaurant_16669787029240/Dashboard1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link')"> Restaurant</button>
+
+                  </h1>
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div id="dashboard2">
+<!-- 
+   <div class='tableauPlaceholder' id='viz1666964567505' style='position: relative'><noscript><a href='#'><img
+            alt='Dashboard 1 '
+            src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book12_16669634723890&#47;Dashboard1&#47;1_rss.png'
+            style='border: none' /></a></noscript><object class='tableauViz' style='display:none;'>
+    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+    <param name='embed_code_version' value='3' />
+    <param name='site_root' value='' />
+    <param name='name' value='Book12_16669634723890&#47;Dashboard1' />
+    <param name='tabs' value='no' />
+    <param name='toolbar' value='yes' />
+    <param name='static_image'
+        value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bo&#47;Book12_16669634723890&#47;Dashboard1&#47;1.png' />
+    <param name='animate_transition' value='yes' />
+    <param name='display_static_image' value='yes' />
+    <param name='display_spinner' value='yes' />
+    <param name='display_overlay' value='yes' />
+    <param name='display_count' value='yes' />
+    <param name='language' value='zh-CN' />
+    <param name='filter' value='publish=yes' />
+</object></div> -->
+
+
+<!-- <div class='tableauPlaceholder' id='viz1666974149827' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='rank_16669741014670&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-CN' /><param name='filter' value='publish=yes' /></object></div>    -->
+<!-- <div class='tableauPlaceholder' id='viz1666975475506' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;rank_16669741014670&#47;Dashboard1?:language=zh-CN&amp;:embed=true&amp;publish=yes' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-CN' /><param name='filter' value='publish=yes' /></object></div>                -->
+<div class='tableauPlaceholder' id='viz1666978629603' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='rank_16669741014670&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ra&#47;rank_16669741014670&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='zh-CN' /><param name='filter' value='publish=yes' /></object></div>               
+      
+</div>
+
+
+      <div id="map"></div>
+   
+
+
+
+      <div id="dashboard">
+
+            <div>
+                  <!-- <button class="button8">Click the button below to filter in/out the related POI</button> -->
+            <div id="filters">
+
+                
+                  <button  class="button2" onclick="Showhealth()"> Health</button>
+                  <button  class="button3" onclick="ShowTransport3()"> Transport</button>
+                  <button  class="button4" onclick="ShowWorship3()"> Worship</button>
+                  <button  class="button5" onclick="ShowRestaurant77()"> Restaurant</button>
+                  <button  class="button6" onclick="ShowHotel3()"> Hotel</button>
+                  <button  class="button7" onclick="Showassembly3()"> Amusement</button>
+                  <!-- <a id="health3" onClick="Showhealth()">Health</a>
+                  <a id="transport3" onClick="ShowTransport3()">Transport</a>
+                  <a id="worship3" onClick="ShowWorship3()" aria-label="Sight">Worship</a>
+                  <a id="restaurant3" onClick="ShowRestaurant3()" aria-label="Shopping">Restaurant</a>
+                  <a id="hotel3" onClick="ShowHotel3()"> Hotel</a>
+                  <a id="assembly3" onClick="Showassembly3()"> Assembly</a> -->
+            </div>
+
+
+
+      </div>
+
+
+
+
+      
+      
+
+
+      <script>
+            mapboxgl.accessToken = 'pk.eyJ1Ijoieml4aXpoYW8xIiwiYSI6ImNsOXI4YjJuMzBlMGIzdW83ZDI5aDZ1eGwifQ.FfNxMUwAg0nL15Nt8Ysp7A';
+
+            const map = new mapboxgl.Map({
+                  container: 'map',
+
+                  style: 'mapbox://styles/zixizhao1/cl9rybhx8000a16os8xcbnpb8',
+                  // center: [ 144.946457,-37.840935],
+                  center: [144.9572884, -37.79831113],
+                  zoom: 13
+            });
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['health3']
+                  });
+
+                  map.setPaintProperty('health3', 'icon-opacity', 1);
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+
+                              `
+  <h1>${feature.properties.Sub_Theme}</h1>
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}"> </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['transport3']
+                  });
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+
+                              `
+  <h1>${feature.properties.Theme}</h1>
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}">  </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['worship3']
+                  });
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+
+                              `
+  <h1>${feature.properties.Theme}</h1>
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}">      </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['restaurant77']
+                  });
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+
+                              `
+  <h1>${feature.properties.Theme}</h1>
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}">    </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['hotel3']
+                  });
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+
+                              `
+  <h1>${feature.properties.Theme}</h1>
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}">     </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+            map.on('click', (event) => {
+                  const features = map.queryRenderedFeatures(event.point, {
+                        layers: ['assembly3']
+                  });
+                  if (!features.length) {
+                        return;
+                  }
+                  const feature = features[0];
+
+                  const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(
+//${feature.properties.Sub_Theme[0]+feature.properties.Sub_Theme[1]+feature.properties.Sub_Theme[2]}
+                              `
+  <h1>${feature.properties.Theme}</h1>                    
+  <p>${feature.properties.Feature_Na}        <a href= http://en.wikipedia.org/w/index.php?title=Special:Search&search="${feature.properties.Sub_Theme}">    </a></p> 
+  <p><img src=${feature.properties.image} alt="Simply Easy Learning" width="200" height="100"></img></p>
+
+  `
+
+                        )
+
+                        .addTo(map);
+            });
+
+
+
+
+            function myFunction() {
+  var x = document.getElementById("dashboard2");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+
+
+            function ShowHotel3() {
+
+                  let opacity = map.getPaintProperty('hotel3', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+                        map.setPaintProperty('hotel3', 'icon-opacity', 0);
+                        map.setLayoutProperty('hotel3', 'visibility', 'none');
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('hotel3', 'visibility', 'visible');
+                        map.setPaintProperty('hotel3', 'icon-opacity', 1);
+                  }
+
+            }
+
+            function Showassembly3() {
+
+                  let opacity = map.getPaintProperty('assembly3', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+                        map.setPaintProperty('assembly3', 'icon-opacity', 0);
+                        map.setLayoutProperty('assembly3', 'visibility', 'none');
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('assembly3', 'visibility', 'visible');
+                        map.setPaintProperty('assembly3', 'icon-opacity', 1);
+                  }
+
+            }
+
+
+            function ShowRestaurant77() {
+
+                  let opacity = map.getPaintProperty('restaurant77', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+                        map.setPaintProperty('restaurant77', 'icon-opacity', 0);
+                        map.setLayoutProperty('restaurant77', 'visibility', 'none');
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('restaurant77', 'visibility', 'visible');
+                        map.setPaintProperty('restaurant77', 'icon-opacity', 1);
+                  }
+
+            }
+
+            function ShowWorship3() {
+
+                  let opacity = map.getPaintProperty('worship3', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+                        map.setPaintProperty('worship3', 'icon-opacity', 0);
+                        map.setLayoutProperty('worship3', 'visibility', 'none');
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('worship3', 'visibility', 'visible');
+                        map.setPaintProperty('worship3', 'icon-opacity', 1);
+                  }
+
+            }
+
+            function Showhealth() {
+
+                  let opacity = map.getPaintProperty('health3', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+
+                        map.setLayoutProperty('health3', 'visibility', 'none');
+                        map.setPaintProperty('health3', 'icon-opacity', 0);
+                        
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('health3', 'visibility', 'visible');
+                        map.setPaintProperty('health3', 'icon-opacity', 1);
+                  }
+
+            }
+
+            function ShowTransport3() {
+
+                  let opacity = map.getPaintProperty('transport3', 'icon-opacity');
+                  var a = 1;
+                  if (opacity == 1) {
+                        map.setPaintProperty('transport3', 'icon-opacity', 0);
+                        map.setLayoutProperty('transport3', 'visibility', 'none');
+                        a = 1;
+
+                  } else {
+                        map.setLayoutProperty('transport3', 'visibility', 'visible');
+                        map.setPaintProperty('transport3', 'icon-opacity', 1);
+                  }
+            }
+
+            // var divElement = document.getElementById('viz1666964567505'); 
+            // var vizElement = divElement.getElementsByTagName('object')[0];
+            
+            // if (divElement.offsetWidth > 800)
+            //  { vizElement.style.minWidth = '350px'; 
+            //  vizElement.style.maxWidth = '450px'; 
+            //  vizElement.style.width = '100%'; 
+            //  vizElement.style.minHeight = '587px'; 
+            //  vizElement.style.maxHeight = '887px'; 
+            //  vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px'; }
+            //   else if (divElement.offsetWidth > 500) 
+            //   { vizElement.style.minWidth = '350px';
+            //    vizElement.style.maxWidth = '450px'; 
+            //    vizElement.style.width = '100%'; 
+            //    vizElement.style.minHeight = '587px';
+            //     vizElement.style.maxHeight = '887px'; 
+            //     vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px'; }
+            //      else { vizElement.style.width = '100%'; vizElement.style.height = '727px'; }
+            //       var scriptElement = document.createElement('script'); 
+            //       scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+            //        vizElement.parentNode.insertBefore(scriptElement, vizElement);           
+
+
+
+
+
+      </script>
+
+
+
+<!-- <script
+type='text/javascript'>                    var divElement = document.getElementById('viz1666964567505'); var vizElement = divElement.getElementsByTagName('object')[0]; if (divElement.offsetWidth > 800) { vizElement.style.minWidth = '350px'; vizElement.style.maxWidth = '450px'; vizElement.style.width = '100%'; vizElement.style.minHeight = '587px'; vizElement.style.maxHeight = '887px'; vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px'; } else if (divElement.offsetWidth > 500) { vizElement.style.minWidth = '350px'; vizElement.style.maxWidth = '450px'; vizElement.style.width = '100%'; vizElement.style.minHeight = '587px'; vizElement.style.maxHeight = '887px'; vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px'; } else { vizElement.style.width = '100%'; vizElement.style.height = '727px'; } var scriptElement = document.createElement('script'); scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js'; vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+ -->
+
+ <!-- <script type='text/javascript'>                    var divElement = document.getElementById('viz1666974149827');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1077px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script> -->
+
+
+ <!-- <script type='text/javascript'>                    var divElement = document.getElementById('viz1666975475506');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1077px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+ -->
+ <script type='text/javascript'>                    var divElement = document.getElementById('viz1666978629603');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='350px';vizElement.style.maxWidth='450px';vizElement.style.width='100%';vizElement.style.minHeight='587px';vizElement.style.maxHeight='887px';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1077px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+//  "<h1>Hello World!</h1>"
+
+// "<h1>Hello World!</h2>"
+     // //  "<h3>${feature.properties.Theme}</h3>"
+     // <img src="'+e.features[0].properties.image+'"/>
+     //  <h2> hhhhhhh <h3>
+     // p><img src='https://simplemaps.com/static/img/frog.png'></img></p>
+     // <img src="'features.properties.image'"/>
+     // <p><img src='https://simplemaps.com/static/img/frog.png' style = 'height: 10%; width: 10%;'></img></p>
+     // {`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${feature.properties.Sub_Theme}, ${feature.properties.Feature_Na}`}
+     //    <p>${feature.properties.Sub_Theme}        <a href="https://github.com/visgl/react-map-gl/tree/7.0-release/examples/layers" target="_new">       View Code↗</a></p> 
+     // {`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${feature.properties.Sub_Theme}, ${feature.properties.Feature_Na}`} -->
+
+
+
+
